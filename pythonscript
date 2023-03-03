@@ -1,0 +1,24 @@
+import random
+import requests
+from bs4 import BeautifulSoup
+import subprocess
+import ntfy
+
+# Scrape movie titles from IMDb
+response = requests.get('https://www.imdb.com/chart/top/')
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# Extract the titles, release years, and IMDb links from the HTML
+titles = [title.text.strip() for title in soup.select('.titleColumn a')]
+years = [int(year.text.strip('()')) for year in soup.select('.titleColumn span')]
+links = ['https://www.imdb.com' + link['href'] for link in soup.select('.titleColumn a')]
+
+# Combine the titles, years, and links into a list of tuples
+movies = list(zip(titles, years, links))
+
+# Get a random movie recommendation
+random_movie = random.choice(movies)
+
+# Send movie recommendation to Telegram chat using ntfy and subprocess
+message = f"Recommended movie: {random_movie[0]} ({random_movie[1]})\nIMDb link: {random_movie[2]}"
+ntfy.notify(title="Movie Recommendation", message=message, backend="telegram")
