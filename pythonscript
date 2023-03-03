@@ -19,6 +19,6 @@ movies = list(zip(titles, years, links))
 # Get a random movie recommendation
 random_movie = random.choice(movies)
 
-# Send movie recommendation to Telegram chat using ntfy and subprocess
+# Send movie recommendation to Telegram chat using ntfy.
 message = f"Recommended movie: {random_movie[0]} ({random_movie[1]})\nIMDb link: {random_movie[2]}"
 ntfy.notify(title="Movie Recommendation", message=message, backend="telegram")
